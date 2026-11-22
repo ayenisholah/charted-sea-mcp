@@ -4,7 +4,7 @@ Same conventions as [charted-sea-client](../../charted-sea-client/docs/CI_CD.md)
 
 | File | Trigger | What it does |
 |---|---|---|
-| `ci.yml` | push to `main`, every PR | `verify`: commitlint, format, lint, typecheck, `check:deps`, `check:dupes`, `check:unused`. `test`: `test:coverage` on Node 20, 22, 24. `package`: build, `publint`, stdio smoke test (startup time, missing-token failure), then the MCP Inspector CLI `tools/list` against the packed tarball. `docker`: build the image, check `/healthz`, `tools/list` over HTTP, 401 without a token, and the `nonroot` user. |
+| `ci.yml` | push to `main`, every PR | `verify`: commitlint, format, lint, typecheck, `check:deps`, `check:dupes`, `check:unused`. `test`: `test:coverage` on Node 22 and 24. `package`: build, `publint`, stdio smoke test (startup time, missing-token failure), then the MCP Inspector CLI `tools/list` against the packed tarball. `docker`: build the image, check `/healthz`, `tools/list` over HTTP, 401 without a token, and the `nonroot` user. |
 | `codeql.yml` | PR, push, weekly | CodeQL for TypeScript. |
 | `security.yml` | PR, push | gitleaks; dependency review on PRs. |
 | `scorecard.yml` | weekly | OpenSSF Scorecard. |
