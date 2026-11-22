@@ -1,0 +1,11 @@
+dist
+coverage
+node_modules
+docs-site
+package-lock.json
+CHANGELOG.md
+.changeset/*.md
+*.md
+reports
+.stryker-tmp
+*.md

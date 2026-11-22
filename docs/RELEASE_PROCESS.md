@@ -1,6 +1,6 @@
 # Release process
 
-Same flow as [charted-sea-client](../../charted-sea-client/docs/RELEASE_PROCESS.md): SemVer, a changeset per user-visible change, a "Version packages" PR, and npm publish with provenance on merge.
+Same flow as [charted-sea-client](../../charted-sea-client/docs/RELEASE_PROCESS.md): SemVer, a changeset per user-visible change, a `release/X.Y.Z` PR made with `npx changeset version`, and npm publish with provenance through trusted publishing when it merges. `main` only changes through pull requests.
 
 ## Extra for this project
 
@@ -9,8 +9,9 @@ Same flow as [charted-sea-client](../../charted-sea-client/docs/RELEASE_PROCESS.
 
 ## Before the first publish (0.1.0)
 
-- [ ] charted-sea-client 0.1.0 is published.
+- [x] charted-sea-client is published (0.2.0, with provenance).
 - [ ] Marc has agreed to the name.
 - [ ] Tested by hand in Claude Code and Cursor; screenshots or a short recording added to the README.
-- [ ] Live smoke test passed.
+- [x] Live smoke test passed (2026-11-22).
+- [ ] npm trusted publishing configured for `charted-sea-mcp` (needs a first manual publish, as for the client).
 - [ ] README says "unofficial" above the fold.

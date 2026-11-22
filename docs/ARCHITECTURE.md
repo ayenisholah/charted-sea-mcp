@@ -1,6 +1,6 @@
 # Architecture
 
-Planned.
+Built (pre-release).
 
 ```
 src/
@@ -13,12 +13,14 @@ src/
     spend.ts          per-process submission budget (pure state + clock)
     rate-limiter.ts   token bucket per tool (pattern from mcp-suite)
     cache.ts          small TTL cache for terminal reads (pattern from mcp-suite)
+  deps.ts             the Deps interface handlers receive
+  log.ts              structured JSON logs to stderr, redacted
   format/
     truncate.ts       body preview and truncation (pure)
-    summary.ts        one-line summaries and the untrusted-content notice (pure)
+    result.ts         tool results: one-line summary + JSON, untrusted-content notice (pure)
+    errors.ts         client errors → short, redacted, actionable messages
   transport/
-    stdio.ts
-    http.ts           Streamable HTTP: 127.0.0.1, bearer auth, Origin check
+    http.ts           Streamable HTTP (stateless): bearer auth, Origin check, /healthz
 ```
 
 ## Dependency rules
@@ -42,6 +44,10 @@ flowchart LR
   P --> F[Truncate bodies, add resource URIs, untrusted notice]
   F --> O[Tool result]
 ```
+
+## HTTP mode
+
+Stateless Streamable HTTP: each request gets a fresh `McpServer` and transport, but all of them share one `Deps`, so the spend guard, rate limiter and read cache are per process, not per request. stdio is wired directly in `bin.ts` with the SDK's `StdioServerTransport`.
 
 ## Reused patterns
 
