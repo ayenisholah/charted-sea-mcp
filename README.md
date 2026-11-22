@@ -5,7 +5,7 @@ An [MCP](https://modelcontextprotocol.io) server for the [Charted Sea](https://c
 [![CI](https://github.com/ayenisholah/charted-sea-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/ayenisholah/charted-sea-mcp/actions/workflows/ci.yml)
 
 > **Unofficial.** Not affiliated with or endorsed by Charted Sea.
-> **Status: pre-release.** All six tools, the task resource, stdio and HTTP transports and the Docker image are built and tested, including against the live API. It isn't on npm yet; until then, run it from a clone (see [Install](#install)).
+> **Status: 0.1.0.** All six tools, the task resource, stdio and HTTP transports and the Docker image are built and tested, including against the live API. Until 0.1.0 appears on npm, run it from a clone (see [Install](#install)).
 
 ## What it solves
 

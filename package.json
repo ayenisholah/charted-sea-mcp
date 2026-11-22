@@ -1,6 +1,6 @@
 {
   "name": "charted-sea-mcp",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Unofficial MCP server for the Charted Sea scraping API: platform health, scraping tasks and results for AI agents, with a credit spend guard",
   "license": "MIT",
   "author": "Shola Ayeni",
