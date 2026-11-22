@@ -15,12 +15,14 @@ npm run test:live      # needs CHARTED_SEA_TOKEN; never in PR CI
 
 | Path | What it is |
 |---|---|
-| `src/bin.ts` | entrypoint, wiring only |
+| `src/bin.ts` | entrypoint, wiring only (stdio is connected here) |
 | `src/server.ts` | registers tools and resources |
 | `src/tools/` | one file per tool: schema, handler, summary |
 | `src/guard/` | spend guard, rate limiter, cache |
-| `src/format/` | truncation, summaries, untrusted-content notice |
-| `src/transport/` | stdio and Streamable HTTP |
+| `src/format/` | truncation, tool results with the untrusted-content notice, error messages |
+| `src/transport/` | stateless Streamable HTTP (bearer auth, Origin check, /healthz) |
+| `src/resources/` | the `charted-sea://tasks/{scraper}/{uuid}` resource |
+| `test/` | unit, handler, protocol (in-memory MCP client), transport, live (`*.live.test.ts`) |
 
 ## Rules: never weaken these
 
@@ -32,3 +34,4 @@ npm run test:live      # needs CHARTED_SEA_TOKEN; never in PR CI
 - Tokens never reach tool results, logs or errors.
 - Write the failing test first; coverage stays at 100% per file.
 - Docs state what's true now. Mark anything unbuilt as planned.
+- `main` only changes through PRs. Never push to it directly. After adding a dependency, regenerate the lockfile from scratch (see CONTRIBUTING).
