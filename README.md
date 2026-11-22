@@ -3,7 +3,7 @@
 An [MCP](https://modelcontextprotocol.io) server for the [Charted Sea](https://chartedsea.com) scraping API. It lets Claude, Cursor and other MCP clients check marketplace scraping health, run scraping tasks on Shopee and Lazada, and read results, with a spend guard so an agent can't burn credits in a loop.
 
 > **Unofficial.** Not affiliated with or endorsed by Charted Sea.
-> **Status: planned.** This README describes the 0.1.0 target. See the [roadmap](docs/ROADMAP.md).
+> **Status: pre-release.** All six tools, the task resource, stdio and Streamable HTTP work and are tested; npm publish (0.1.0) follows. See the [roadmap](docs/ROADMAP.md).
 
 <!-- Badges go live at M0: CI · coverage · npm version · npm provenance · OpenSSF Scorecard -->
 
@@ -51,7 +51,19 @@ Cursor and other clients (`mcp.json`):
 | `CHARTED_SEA_MAX_BODY_CHARS` | `20000` | Inline body size before truncation (full body stays a resource) |
 | `CHARTED_SEA_MAX_WAIT_SEC` | `300` | Longest a tool call waits for results |
 | `MCP_TRANSPORT` | `stdio` | `stdio` or `http` |
-| `MCP_HTTP_PORT` / `MCP_HTTP_TOKEN` | `3333` / required for http | Streamable HTTP on `127.0.0.1` with its own bearer token |
+| `CHARTED_SEA_HEALTH_GO` / `CHARTED_SEA_HEALTH_WAIT` | `0.8` / `0.5` | Success-rate thresholds for `go` and `wait` recommendations |
+| `MCP_HTTP_HOST` / `MCP_HTTP_PORT` | `127.0.0.1` / `3333` | Where Streamable HTTP listens (`/mcp`, plus `/healthz`) |
+| `MCP_HTTP_TOKEN` | required for http | Bearer token clients must send; separate from the Charted Sea token; 16+ characters |
+| `MCP_ALLOWED_ORIGINS` | empty | Extra allowed browser `Origin`s (comma-separated); localhost is always allowed |
+
+## Docker
+
+```sh
+docker build -t charted-sea-mcp .
+docker run -p 3333:3333 -e CHARTED_SEA_TOKEN=... -e MCP_HTTP_TOKEN=$(openssl rand -hex 24) charted-sea-mcp
+```
+
+The image is distroless, runs as `nonroot`, serves Streamable HTTP on port 3333 and has a `/healthz` health check. Point an MCP client at `http://<host>:3333/mcp` with `Authorization: Bearer <MCP_HTTP_TOKEN>`.
 
 ## Documentation
 
