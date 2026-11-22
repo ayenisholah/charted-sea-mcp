@@ -31,3 +31,6 @@ jobs:
         with:
           fail-on-severity: high
           allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, BlueOak-1.0.0, CC0-1.0, Python-2.0, MPL-2.0
+          # json-schema-typed (BSD-2-Clause AND JSON) comes from @modelcontextprotocol/sdk and can't be
+          # avoided in an MCP server. Allowed by name only; the JSON license stays off the general list.
+          allow-dependencies-licenses: pkg:npm/json-schema-typed
