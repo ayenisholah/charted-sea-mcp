@@ -1,6 +1,6 @@
 # charted-sea-mcp agent instructions
 
-Unofficial MCP server for the Charted Sea scraping API, built on charted-sea-client. Node 20+.
+Unofficial MCP server for the Charted Sea scraping API, built on charted-sea-client. Node 22+.
 
 ## Commands
 

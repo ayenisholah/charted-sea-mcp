@@ -8,6 +8,6 @@ export default defineConfig({
   format: ["esm"],
   clean: true,
   sourcemap: true,
-  target: "node20",
+  target: "node22",
   define: { __VERSION__: JSON.stringify(version) },
 });

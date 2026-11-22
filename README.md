@@ -35,7 +35,7 @@ All API calls go through [charted-sea-client](https://github.com/ayenisholah/cha
 
 ## Install
 
-You need Node 20 or newer and a Charted Sea API token: log in to the [console](https://console.chartedsea.com), then choose **Get API Token → Generate Token**.
+You need Node 22 or newer and a Charted Sea API token: log in to the [console](https://console.chartedsea.com), then choose **Get API Token → Generate Token**.
 
 ### From a clone (until the npm release)
 
@@ -129,7 +129,7 @@ The server fails fast with a readable message if a setting is missing or invalid
 
 ## How it's tested
 
-- **61 tests at 100% coverage per file**, on Node 20, 22 and 24.
+- **61 tests at 100% coverage per file**, on Node 22 and 24.
 - Protocol tests connect a real MCP client to the server.
 - Transport tests check auth, `Origin` and `/healthz` over real HTTP.
 - CI starts the packed package over stdio and lists its tools with the official MCP Inspector. It also builds the Docker image and checks `/healthz`, `tools/list` over HTTP, the 401 without a token, and the non-root user.
