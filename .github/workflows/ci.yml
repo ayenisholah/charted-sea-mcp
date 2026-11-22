@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Commit messages follow Conventional Commits
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from "${{ github.event.pull_request.base.sha }}" --to "${{ github.event.pull_request.head.sha }}"
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run check:deps
+      - run: npm run check:dupes
+      - run: npm run check:unused
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run test:coverage
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Build, publint, stdio smoke test
+        run: npm run check:package
+      - name: Packed tarball starts over stdio (MCP Inspector CLI tools/list)
+        run: |
+          npm pack
+          mkdir -p /tmp/packed && tar -xzf charted-sea-mcp-*.tgz -C /tmp/packed
+          cp -r node_modules /tmp/packed/package/
+          npx -y @modelcontextprotocol/inspector@2.16.0 --cli node /tmp/packed/package/dist/bin.js \
+            -e CHARTED_SEA_TOKEN=cs_test_000 --method tools/list | tee tools.json
+          test "$(grep -c '"name": "' tools.json)" -eq 6
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build the image
+        run: docker build -t charted-sea-mcp:ci .
+      - name: Image answers tools/list over HTTP and /healthz
+        run: |
+          docker run -d --name mcp -p 3333:3333 -e CHARTED_SEA_TOKEN=cs_test_000 -e MCP_HTTP_TOKEN=ci-http-token-0123456789 charted-sea-mcp:ci
+          for i in $(seq 1 30); do curl -fs http://127.0.0.1:3333/healthz && break; sleep 1; done
+          curl -fs -X POST http://127.0.0.1:3333/mcp \
+            -H 'authorization: Bearer ci-http-token-0123456789' -H 'content-type: application/json' \
+            -H 'accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | tee tools.json
+          test "$(grep -o '"name":"[a-z_]*"' tools.json | wc -l)" -eq 6
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:3333/mcp)" -eq 401
+          test "$(docker inspect --format '{{.Config.User}}' charted-sea-mcp:ci)" = "nonroot"

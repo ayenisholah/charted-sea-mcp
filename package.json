@@ -1,0 +1,75 @@
+{
+  "name": "charted-sea-mcp",
+  "version": "0.0.0",
+  "description": "Unofficial MCP server for the Charted Sea scraping API: platform health, scraping tasks and results for AI agents, with a credit spend guard",
+  "license": "MIT",
+  "author": "Shola Ayeni",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayenisholah/charted-sea-mcp.git"
+  },
+  "homepage": "https://github.com/ayenisholah/charted-sea-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/ayenisholah/charted-sea-mcp/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "charted-sea-mcp": "dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "charted-sea",
+    "scraping",
+    "shopee",
+    "lazada"
+  ],
+  "scripts": {
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:live": "vitest run --config vitest.live.config.ts",
+    "build": "tsup",
+    "inspect": "npm run build && npx @modelcontextprotocol/inspector node dist/bin.js",
+    "check:lockfile": "npm ci --dry-run --ignore-scripts --no-audit --no-fund",
+    "check:deps": "depcruise src --config .dependency-cruiser.cjs",
+    "check:dupes": "jscpd src",
+    "check:unused": "knip",
+    "check:package": "npm run build && publint && node scripts/smoke-stdio.mjs",
+    "check": "npm run check:lockfile && npm run format:check && npm run lint && npm run typecheck && npm run check:deps && npm run check:dupes && npm run check:unused && npm run test:coverage && npm run check:package"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "charted-sea-client": "^0.2.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^20.19.43",
+    "@vitest/coverage-v8": "^4.1.12",
+    "dependency-cruiser": "^17.4.3",
+    "eslint": "^10.15.0",
+    "fast-check": "^4.11.0",
+    "jscpd": "^5.4.3",
+    "knip": "^6.47.0",
+    "prettier": "^3.10.1",
+    "publint": "^0.3.25",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^4.1.12"
+  }
+}
