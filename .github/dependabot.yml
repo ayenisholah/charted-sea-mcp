@@ -5,8 +5,14 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # Minor and patch updates together; each major arrives as its own PR so it can be migrated on its own.
       dev-dependencies:
         dependency-type: development
+        update-types: [minor, patch]
+    ignore:
+      # Types stay at the oldest supported Node (engines: >=20), so code can't use newer APIs.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
