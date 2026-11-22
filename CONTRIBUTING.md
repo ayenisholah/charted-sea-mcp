@@ -20,6 +20,10 @@ npm run check         # every gate; must pass before a PR
 5. Use [Conventional Commits](https://www.conventionalcommits.org) (`feat:`, `fix:`, `docs:` …). commitlint checks them in CI.
 6. Add a changeset (`npx changeset`) for any change users will notice.
 
+## Dependencies
+
+After adding or upgrading a dependency, regenerate the lockfile from scratch (`rm -rf node_modules package-lock.json && npm install --ignore-scripts`). Incremental installs can drop optional platform packages, and then CI's `npm ci` and the Docker build fail.
+
 ## Rules that reviews enforce
 
 - Behaviour matches [the spec](docs/SPEC.md). If the API behaves differently, update the spec in the same PR and link the evidence.
